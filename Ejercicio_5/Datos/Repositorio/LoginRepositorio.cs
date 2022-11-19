@@ -13,16 +13,19 @@ namespace Datos.Repositorio
     public class LoginRepositorio : ILoginRepositorio
     {
         private string CadenaConexion;
+        
 
-        public LoginRepositorio(string cadena_conexion)
+
+        public LoginRepositorio(string _cadenaconexion)
         {
-            CadenaConexion = cadena_conexion;
+            CadenaConexion = _cadenaconexion;
         }
-
         private MySqlConnection Conexion()
         {
             return new MySqlConnection(CadenaConexion);
         }
+
+
         public async Task<bool> ValidarUsuario(Login login)
         {
             bool valido = false;
@@ -30,14 +33,23 @@ namespace Datos.Repositorio
             {
                 using MySqlConnection conexion = Conexion();
                 await conexion.OpenAsync();
-                string sql = "SELECT 1 FROM Usuario WHERE = @Codigo AND Clave = @Clave;";
-                valido = await conexion.ExecuteScalarAsync<bool>(sql, new {login.Usuario, login.Clave});
+                string sql = "SELECT 1 FROM usuario WHERE Codigo = @Codigo AND Clave = @Clave;";
+                valido = await conexion.ExecuteScalarAsync<bool>(sql, new { login.Codigo, login.Clave });
             }
             catch (Exception)
             {
-                
             }
             return valido;
         }
+
+
+       
+
+
+
+
+
+
+
     }
 }
